@@ -235,6 +235,21 @@ body{position:relative;width:100%;}
   margin:8px auto 8px!important;
   padding-bottom:env(safe-area-inset-bottom)!important;
 }
+
+/* iOS study layout: keep prompt readable and anchor the answer area near the keyboard. */
+html,body{overflow:hidden;overscroll-behavior:none}
+.studyPage{height:var(--vvh,100dvh)!important;top:var(--vvtop,0px)!important;bottom:auto!important;inset-inline:0!important;display:none;overflow:hidden;transition:none}
+.studyPage.active{display:flex;flex-direction:column}
+.studyTop,.progressBar,.studyTools,.studyBottom{flex:none}
+.studyMain{flex:1;min-height:0!important;margin:0 auto!important;padding:14px 0 10px!important;justify-content:flex-start!important;align-items:center;overflow-y:auto;overscroll-behavior:contain}
+.promptType{margin:0 0 8px!important;line-height:1.35}
+.promptWord{min-height:0!important;line-height:1.15;margin:0!important}
+.answerWrap{margin-top:auto!important;padding-top:clamp(18px,5vh,44px);padding-bottom:8px}
+.answerInput{font-size:16px!important}
+.studyBottom{margin:0 auto max(10px,env(safe-area-inset-bottom))!important;padding-top:8px;transition:margin-bottom .16s ease-out}
+.studyPage.keyboard-focused .studyMain{padding-bottom:4px!important}
+.studyPage.keyboard-focused .answerWrap{padding-top:12px;padding-bottom:4px}
+.studyPage.keyboard-focused .studyBottom{margin-bottom:6px!important}
 </style>
 </head>
 <body>
@@ -298,19 +313,25 @@ body{position:relative;width:100%;}
 <input type="file" id="fileInput" accept=".csv,text/csv" class="hidden">
 
 <script>
-// Track iOS Safari's visual viewport so the fixed app shell follows the visible area.
+// Keep the study surface aligned with the currently visible iOS Safari viewport.
 (function(){
  const vv=window.visualViewport;
+ let scheduled=false;
  function fit(){
-  const r=document.documentElement.style;
-  r.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');
-  r.setProperty('--vvtop',(vv?vv.offsetTop:0)+'px');
+  if(scheduled)return;
+  scheduled=true;
+  requestAnimationFrame(()=>{
+   scheduled=false;
+   const r=document.documentElement.style;
+   r.setProperty('--vvh',Math.round(vv?vv.height:window.innerHeight)+'px');
+   r.setProperty('--vvtop',Math.round(vv?vv.offsetTop:0)+'px');
+  });
  }
- vv?.addEventListener('resize',fit);
- vv?.addEventListener('scroll',fit);
- window.addEventListener('resize',fit);
+ vv?.addEventListener('resize',fit,{passive:true});
+ vv?.addEventListener('scroll',fit,{passive:true});
+ window.addEventListener('resize',fit,{passive:true});
  fit();
-})();
+})();;
 const STORE='myVocabulary_v2';
 const uid=()=>Math.random().toString(36).slice(2,10);
 let state;try{state=JSON.parse(localStorage.getItem(STORE))||JSON.parse(localStorage.getItem('myVocabularyApp_v1'))}catch(e){}
@@ -559,7 +580,7 @@ function submit(){
  }
  $('progressText').textContent=`${completedIds.size} / ${studyItems.length}`;
  $('progressFill').style.width=(completedIds.size/studyItems.length*100)+'%';
- $('studyAnswer').readOnly=true;$('studyPage').classList.add('keyboard-focused');$('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');
+ $('studyAnswer').readOnly=true;$('studyAnswer').blur();$('studyPage').classList.remove('keyboard-focused');$('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');
  if(studyMode==='en-ko')playPronunciation(w.en,true);
  save();renderStatsOnly();persistStudySession();
 }
@@ -578,7 +599,7 @@ function next(){
  if(!answered){
   current.wrong=(current.wrong||0)+1;
   const expected=studyMode==='en-ko'?current.ko:current.en;
-  $('studyAnswer').disabled=true;
+  $('studyAnswer').disabled=true;$('studyAnswer').blur();$('studyPage').classList.remove('keyboard-focused');
   $('studyAnswer').classList.add('bad');
   $('feedback').textContent='모르는 단어로 처리했습니다';
   $('feedback').className='feedback bad';
@@ -615,7 +636,7 @@ function finishStudy(){
 $('submitAnswer').onclick=submit;$('nextQuestion').onclick=next;
 $('showAnswer').onclick=()=>{
  if(answered||finished)return;let w=studyQueue[studyIndex],expected=studyMode==='en-ko'?w.ko:w.en;
- w.wrong=(w.wrong||0)+1;answered=true;$('studyAnswer').value='';$('studyAnswer').classList.add('bad');$('studyAnswer').disabled=true;
+ w.wrong=(w.wrong||0)+1;answered=true;$('studyAnswer').value='';$('studyAnswer').classList.add('bad');$('studyAnswer').disabled=true;$('studyAnswer').blur();$('studyPage').classList.remove('keyboard-focused');
  $('feedback').textContent='정답을 확인하세요';$('feedback').className='feedback bad';showAnswerLabel(expected);
  $('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');if(studyMode==='en-ko')playPronunciation(w.en,true);save();renderStatsOnly();persistStudySession()
 };
