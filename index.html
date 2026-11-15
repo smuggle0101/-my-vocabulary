@@ -178,6 +178,15 @@ body{position:relative;width:100%;}
  #studyPage .studyBottom button{flex:1 1 0;min-width:0!important;padding-left:8px;padding-right:8px}
 }
 
+
+/* iOS keyboard stability refinement */
+#studyPage .studyMain{
+ justify-content:flex-start!important;
+ padding-top:clamp(22px,5vh,48px)!important;
+}
+#studyPage .promptType{margin-bottom:12px!important}
+#studyPage .answerWrap{margin-top:22px!important}
+#studyPage .answerInput{font-size:16px!important}
 </style>
 </head>
 <body>
@@ -241,17 +250,27 @@ body{position:relative;width:100%;}
 <input type="file" id="fileInput" accept=".csv,text/csv" class="hidden">
 
 <script>
-// Track iOS Safari's visual viewport so the fixed app shell follows the visible area.
+// Keep the app aligned to iOS Safari's visible viewport.
+// Round viewport values to whole CSS pixels to avoid fractional transforms
+// that can make text look soft, and coalesce rapid keyboard events per frame.
 (function(){
  const vv=window.visualViewport;
+ let scheduled=false;
  function fit(){
-  const r=document.documentElement.style;
-  r.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');
-  r.setProperty('--vvtop',(vv?vv.offsetTop:0)+'px');
+  if(scheduled) return;
+  scheduled=true;
+  requestAnimationFrame(()=>{
+   scheduled=false;
+   const r=document.documentElement.style;
+   const height=vv ? vv.height : window.innerHeight;
+   const top=vv ? vv.offsetTop : 0;
+   r.setProperty('--vvh',Math.round(height)+'px');
+   r.setProperty('--vvtop',Math.round(top)+'px');
+  });
  }
- vv?.addEventListener('resize',fit);
- vv?.addEventListener('scroll',fit);
- window.addEventListener('resize',fit);
+ vv?.addEventListener('resize',fit,{passive:true});
+ vv?.addEventListener('scroll',fit,{passive:true});
+ window.addEventListener('resize',fit,{passive:true});
  fit();
 })();
 const STORE='myVocabulary_v2';
