@@ -179,14 +179,62 @@ body{position:relative;width:100%;}
 }
 
 
-/* iOS keyboard stability refinement */
-#studyPage .studyMain{
- justify-content:flex-start!important;
- padding-top:clamp(22px,5vh,48px)!important;
+/* iOS Safari study layout: clear vertical flow and stable keyboard behavior */
+#studyPage.studyPage.active{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
 }
-#studyPage .promptType{margin-bottom:12px!important}
-#studyPage .answerWrap{margin-top:22px!important}
+#studyPage .studyTop{flex:0 0 48px!important}
+#studyPage .progressBar{flex:0 0 5px!important}
+#studyPage .studyTools{
+  position:static!important;
+  flex:0 0 auto!important;
+  margin:8px auto 0!important;
+  min-height:42px!important;
+}
+#studyPage .studyMain{
+  position:relative!important;
+  inset:auto!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:center!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  padding:clamp(18px,4vh,42px) 0 12px!important;
+  margin:0 auto!important;
+}
+#studyPage .promptType{
+  position:static!important;
+  inset:auto!important;
+  width:100%!important;
+  margin:0 0 12px!important;
+  text-align:center!important;
+  line-height:1.4!important;
+}
+#studyPage .promptWord{
+  position:static!important;
+  inset:auto!important;
+  width:100%!important;
+  min-height:0!important;
+  margin:0!important;
+  line-height:1.2!important;
+}
+#studyPage .answerWrap{
+  position:static!important;
+  inset:auto!important;
+  width:100%!important;
+  margin:24px auto 0!important;
+}
 #studyPage .answerInput{font-size:16px!important}
+#studyPage .studyBottom{
+  position:static!important;
+  flex:0 0 auto!important;
+  margin:8px auto 8px!important;
+  padding-bottom:env(safe-area-inset-bottom)!important;
+}
 </style>
 </head>
 <body>
@@ -250,27 +298,17 @@ body{position:relative;width:100%;}
 <input type="file" id="fileInput" accept=".csv,text/csv" class="hidden">
 
 <script>
-// Keep the app aligned to iOS Safari's visible viewport.
-// Round viewport values to whole CSS pixels to avoid fractional transforms
-// that can make text look soft, and coalesce rapid keyboard events per frame.
+// Track iOS Safari's visual viewport so the fixed app shell follows the visible area.
 (function(){
  const vv=window.visualViewport;
- let scheduled=false;
  function fit(){
-  if(scheduled) return;
-  scheduled=true;
-  requestAnimationFrame(()=>{
-   scheduled=false;
-   const r=document.documentElement.style;
-   const height=vv ? vv.height : window.innerHeight;
-   const top=vv ? vv.offsetTop : 0;
-   r.setProperty('--vvh',Math.round(height)+'px');
-   r.setProperty('--vvtop',Math.round(top)+'px');
-  });
+  const r=document.documentElement.style;
+  r.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');
+  r.setProperty('--vvtop',(vv?vv.offsetTop:0)+'px');
  }
- vv?.addEventListener('resize',fit,{passive:true});
- vv?.addEventListener('scroll',fit,{passive:true});
- window.addEventListener('resize',fit,{passive:true});
+ vv?.addEventListener('resize',fit);
+ vv?.addEventListener('scroll',fit);
+ window.addEventListener('resize',fit);
  fit();
 })();
 const STORE='myVocabulary_v2';
@@ -473,7 +511,7 @@ function showQuestion(){
  $('promptType').textContent=studyMode==='en-ko'?'영어 단어의 한글 뜻을 입력하세요':'한글 뜻의 영어 스펠링을 입력하세요';
  $('promptWord').textContent=studyMode==='en-ko'?w.en:w.ko;
  $('replayPronunciation').classList.toggle('hidden',studyMode!=='en-ko');
- $('studyAnswer').value='';$('studyAnswer').disabled=false;$('studyAnswer').className='answerInput';$('feedback').textContent='';$('feedback').className='feedback';$('answerReveal').replaceChildren();
+ $('studyAnswer').value='';$('studyAnswer').disabled=false;$('studyAnswer').readOnly=false;$('studyAnswer').className='answerInput';$('feedback').textContent='';$('feedback').className='feedback';$('answerReveal').replaceChildren();
  $('submitAnswer').classList.remove('hidden');$('nextQuestion').classList.add('hidden');$('nextQuestion').textContent='다음 단어';$('nextQuestion').onclick=next;$('showAnswer').classList.remove('hidden');
  /* 입력창 자동 포커스를 제거해 iOS Safari가 학습 화면을 키보드 위치로 자동 이동시키지 않도록 함 */if(studyMode==='en-ko')playPronunciation(w.en,true);
 }
@@ -521,7 +559,7 @@ function submit(){
  }
  $('progressText').textContent=`${completedIds.size} / ${studyItems.length}`;
  $('progressFill').style.width=(completedIds.size/studyItems.length*100)+'%';
- $('studyAnswer').disabled=true;$('studyPage').classList.remove('keyboard-focused');$('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');
+ $('studyAnswer').readOnly=true;$('studyPage').classList.add('keyboard-focused');$('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');
  if(studyMode==='en-ko')playPronunciation(w.en,true);
  save();renderStatsOnly();persistStudySession();
 }
