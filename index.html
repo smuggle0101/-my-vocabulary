@@ -12,17 +12,20 @@ header{height:66px;display:flex;align-items:center;justify-content:space-between
 .page{display:none}.page.active{display:block}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
 h2{font-size:19px;margin:0 0 14px;letter-spacing:-.4px}h3{font-size:15px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
 .deckHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 16px}.deckHead select{max-width:220px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:15px}.stat{background:#f8f9fc;border:1px solid var(--line);border-radius:14px;padding:12px}.stat strong{font-size:21px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:15px}.stat{background:#f8f9fc;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;color:var(--ink);width:100%;min-width:0}.stat strong{font-size:21px;display:block}.stat span{font-size:12px;color:var(--muted)}.statAction{cursor:pointer;transition:border-color .15s,background .15s}.statAction:active{background:#eef2ff;border-color:var(--blue)}.statAction.selected{background:#eef2ff;border-color:var(--blue)}.statAction:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}.tab{background:#eef0f5;color:#667080}.tab.active{background:var(--blue);color:white}
 .toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.toolbar .group{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-.wordList{display:flex;flex-direction:column;gap:7px;margin-top:12px}.wordRow{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 11px}.wordRow .idx{font-size:12px;color:#a0a6b1}.wordRow .en{font-weight:700;opacity:1;color:var(--ink);overflow-wrap:anywhere}.wordRow .ko{font-size:14px;color:#626b7a;opacity:1;overflow-wrap:anywhere}.star{font-size:22px;line-height:1;background:transparent;color:#c5c9d1;padding:3px 5px}.star.on{color:var(--gold)}.rowBtns{display:flex;gap:4px}.rowBtns button{padding:6px 8px;font-size:12px}
+.wordList{display:flex;flex-direction:column;gap:7px;margin-top:12px}.wordRow{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 11px}.wordRow .idx{font-size:12px;color:#a0a6b1}.wordRow .en{font-weight:700;opacity:1;color:var(--ink);overflow-wrap:anywhere}.wordRow .ko{font-size:14px;color:#626b7a;opacity:1;overflow-wrap:anywhere}.star{font-size:22px;line-height:1;background:transparent;color:#c5c9d1;padding:3px 5px}.star.on{color:var(--gold)}
+.star.level1{color:#f5b400!important}
+.star.level2{color:#e04452!important}
+.rowBtns{display:flex;gap:4px}.rowBtns button{padding:6px 8px;font-size:12px}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.field label{font-size:13px;font-weight:700;color:#596273}.field input,.field select,select,input[type=text]{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink);width:100%;padding:12px;border:1px solid #dce1e8;border-radius:11px;background:#fff;color:var(--ink);outline:none}.field input:focus,input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #4169f51a}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.empty{padding:28px 12px;border:1px dashed #d6dbe5;border-radius:14px;text-align:center;color:var(--muted)}
 .configCard{max-width:580px;margin:12px auto}.configCard .option{border:1px solid var(--line);padding:14px;border-radius:13px;margin:8px 0;display:flex;align-items:center;gap:10px}.option input{accent-color:var(--blue);width:18px;height:18px}.option strong{display:block}.option small{color:var(--muted)}
 .studyPage{touch-action:pan-y;overscroll-behavior:none;position:fixed;inset:0;z-index:10;background:#f8f9fc;display:none;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);overflow:hidden}.studyPage.active{display:flex;flex-direction:column}.studyTop{height:58px;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;max-width:760px;width:100%;margin:0 auto}.iconBtn{background:transparent;color:#626b7a;font-size:22px;padding:8px}.progressText{text-align:center;font-weight:750;font-size:14px}.studyTools{display:flex;justify-content:flex-end;max-width:760px;width:100%;margin:3px auto 0;gap:12px;align-items:center}.studyTools .star{font-size:26px}.audioBtn{background:#eef2ff;color:#315efb;border:1px solid #dfe6ff;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700}.audioBtn:disabled{opacity:.45}.studyTools .scopeLabel{font-size:12px;color:var(--muted)}
 .studyMain{touch-action:pan-y;user-select:none;-webkit-user-select:none;width:100%;max-width:760px;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:380px;padding:20px 0}.promptType{font-size:13px;color:var(--muted);margin-bottom:18px}.promptWord{font-size:clamp(30px,7vw,48px);font-weight:800;letter-spacing:-1px;text-align:center;overflow-wrap:anywhere;padding:0 8px;min-height:60px}.answerWrap{width:100%;max-width:560px;margin-top:38px}.answerInput{font-size:22px;text-align:left;padding:16px 14px!important;border-radius:10px!important;background:white;min-height:66px}.answerInput.good,.answerInput.good:disabled{border:2px solid #78d21d!important;background:#fff!important;color:#78c91e!important;-webkit-text-fill-color:#78c91e!important;opacity:1!important}
 .answerInput.bad,.answerInput.bad:disabled{border:2px solid #d94b55!important;background:#fff!important;color:#d94b55!important;-webkit-text-fill-color:#d94b55!important;opacity:1!important}
-.answerInput:disabled{opacity:1!important;-webkit-text-fill-color:currentColor!important}.feedback{display:none}.answerReveal{display:flex;align-items:center;gap:12px;font-size:23px;color:#78c91e;text-align:left;margin-top:12px;min-height:38px;font-weight:500}.answerReveal .answerTag{display:inline-flex;align-items:center;justify-content:center;background:#78cf1d;color:white;border-radius:22px;padding:5px 12px;font-size:15px;font-weight:800;white-space:nowrap}.answerReveal:empty{display:none}
+.answerInput:disabled{opacity:1!important;-webkit-text-fill-color:currentColor!important}.feedback{display:none}.answerReveal{display:flex;align-items:center;gap:12px;font-size:23px;color:#78c91e;text-align:left;margin-top:8px;min-height:38px;font-weight:500}.answerReveal .answerTag{display:inline-flex;align-items:center;justify-content:center;background:#78cf1d;color:white;border-radius:22px;padding:5px 12px;font-size:15px;font-weight:800;white-space:nowrap}.answerReveal:empty{display:none}
 .studyBottom{width:100%;max-width:760px;margin:0 auto 18px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.studyBottom button{min-width:118px}.progressBar{height:5px;background:#e8ebf2;border-radius:20px;max-width:760px;width:100%;margin:0 auto}.progressBar>div{height:100%;background:var(--green);border-radius:20px;width:0}
 select{padding:10px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink)}
 .note{background:#f2f5ff;color:#53649b;border-radius:11px;padding:11px 13px;font-size:13px;line-height:1.5;margin:12px 0}
@@ -282,7 +285,7 @@ html, body {
 }
 #studyPage .promptType {
   position: absolute !important;
-  top: 27vh !important;
+  top: 21vh !important;
   left: 0 !important; right: 0 !important;
   margin: 0 !important;
   text-align: center !important;
@@ -291,7 +294,7 @@ html, body {
 }
 #studyPage .promptWord {
   position: absolute !important;
-  top: 33vh !important;
+  top: 27vh !important;
   left: 0 !important; right: 0 !important;
   width: 100% !important; min-height: 0 !important;
   margin: 0 !important; padding: 0 8px !important;
@@ -302,7 +305,7 @@ html, body {
 }
 #studyPage .answerWrap {
   position: absolute !important;
-  top: 42vh !important;
+  top: 35vh !important;
   left: 0 !important; right: 0 !important;
   width: 100% !important; max-width: 560px !important;
   margin: 0 auto !important;
@@ -337,11 +340,148 @@ html, body {
   bottom: calc(env(safe-area-inset-bottom) + 8px) !important;
 }
 @media (max-height: 720px) {
-  #studyPage .promptType { top: 25vh !important; }
-  #studyPage .promptWord { top: 31vh !important; }
-  #studyPage .answerWrap { top: 40vh !important; }
+  #studyPage .promptType { top: 20vh !important; }
+  #studyPage .promptWord { top: 26vh !important; }
+  #studyPage .answerWrap { top: 34vh !important; }
 }
 
+
+/* v6: restore upper progress header; put range label directly below it.
+   Keep bottom actions out of document flow so they cannot push study content. */
+#studyPage .studyTop {
+  top: calc(env(safe-area-inset-top) + 4px) !important;
+  height: 44px !important;
+}
+#studyPage .progressBar {
+  top: calc(env(safe-area-inset-top) + 54px) !important;
+  height: 5px !important;
+}
+#studyPage .studyTools {
+  top: calc(env(safe-area-inset-top) + 76px) !important;
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+#studyPage .studyTools .scopeLabel {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  font-size: 14px !important;
+  line-height: 1.3 !important;
+}
+#studyPage .studyBottom {
+  position: absolute !important;
+  left: 16px !important;
+  right: 16px !important;
+  bottom: calc(env(safe-area-inset-bottom) + 8px) !important;
+  margin: 0 auto !important;
+  transition: none !important;
+  animation: none !important;
+}
+#studyPage.keyboard-focused .studyBottom {
+  position: absolute !important;
+  bottom: calc(env(safe-area-inset-bottom) + 8px) !important;
+}
+
+
+/* v7: place answer actions directly beneath the answer field, not at the screen bottom. */
+#studyPage .answerWrap {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+#studyPage .studyBottom,
+#studyPage.keyboard-focused .studyBottom {
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 12px 0 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  gap: 8px !important;
+  transition: none !important;
+  animation: none !important;
+}
+#studyPage .studyBottom button {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+
+/* v8: keep answer actions below the input initially; after grading,
+   anchor only the Next button near the bottom of the visible study screen. */
+#studyPage { position: relative !important; }
+#studyPage .studyBottom {
+  position: absolute !important;
+  top: calc(42vh + 86px) !important;
+  bottom: auto !important;
+  left: 16px !important; right: 16px !important;
+  width: auto !important; max-width: 760px !important;
+  margin: 0 auto !important; padding: 0 !important;
+  display: flex !important; gap: 8px !important;
+  transition: none !important; animation: none !important;
+}
+#studyPage:has(#nextQuestion:not(.hidden)) .studyBottom {
+  top: auto !important;
+  bottom: calc(env(safe-area-inset-bottom) + 22px) !important;
+}
+#studyPage .studyBottom button {
+  transition: none !important; animation: none !important;
+}
+@media (max-height: 720px) {
+  #studyPage .studyBottom { top: calc(40vh + 82px) !important; }
+  #studyPage:has(#nextQuestion:not(.hidden)) .studyBottom { top: auto !important; bottom: calc(env(safe-area-inset-bottom) + 16px) !important; }
+}
+
+
+/* v9: Enter is the only answer action; remove redundant manual controls. */
+#studyPage #showAnswer,
+#studyPage #submitAnswer {
+  display: none !important;
+}
+#studyPage .studyBottom {
+  justify-content: center !important;
+}
+#studyPage #nextQuestion {
+  width: 100% !important;
+}
+
+
+
+/* Hit-testing fix: the full-screen studyMain layer was painted over the
+   header and study tools, intercepting taps on their controls. Keep its
+   existing geometry, but place interactive chrome above it. */
+#studyPage .studyMain { z-index: 1 !important; }
+#studyPage .studyTop,
+#studyPage .progressBar,
+#studyPage .studyTools,
+#studyPage .studyBottom { z-index: 5 !important; }
+
+
+/* Compact learning setup: keep the start controls visible without scrolling on iPhone. */
+@media(max-width:600px){
+ #configPage{padding-bottom:4px}
+ #configPage>.toolbar{min-height:38px;margin-bottom:2px}
+ #configPage .configCard{width:100%;max-width:none;margin:4px auto 0;padding:11px 12px;border-radius:15px}
+ #configPage .configCard h3{font-size:14px;margin:0 0 7px}
+ #configPage .configCard .option{padding:8px 10px;margin:5px 0;gap:8px;border-radius:11px;min-height:0}
+ #configPage .configCard .option strong{font-size:14px;line-height:1.25}
+ #configPage .configCard .option small{font-size:11px;line-height:1.25;display:block;margin-top:2px}
+ #configPage .configCard .option input{width:16px;height:16px;flex:0 0 16px}
+ #configPage .configCard hr{margin:9px 0!important}
+ #configPage .configCard .field{gap:4px;margin-bottom:7px}
+ #configPage .configCard .field label{font-size:12px}
+ #configPage .configCard .field select{padding:8px 10px;border-radius:9px;font-size:14px;min-height:38px}
+ #configPage .configCard .note{font-size:11px;line-height:1.3;padding:7px 9px;margin:7px 0}
+ #configPage #resumeStudy{padding:9px!important;margin-bottom:5px!important;font-size:13px}
+ #configPage #startStudy{padding:10px!important;font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -352,8 +492,8 @@ html, body {
 <section class="page active" id="listPage">
   <div class="deckHead"><div><div class="muted">MY WORD BOOK</div><h2 id="deckTitle" style="margin:3px 0 0">기본 단어장</h2></div><select id="deckSelect" aria-label="단어장 선택"></select></div>
   <div class="toolbar" style="margin:12px 0 14px"><span class="muted">단어를 확인하고 바로 학습을 시작하세요.</span><button class="primary" id="learnTopBtn">학습하기 →</button></div>
-  <div class="stats"><div class="stat"><strong id="totalN">0</strong><span>전체 단어</span></div><div class="stat"><strong id="starN">0</strong><span>별표 단어</span></div><div class="stat"><strong id="knownN">0</strong><span>암기 완료</span></div></div>
-  <div class="toolbar"><div class="group"><button class="tab active" id="allTab">전체 단어</button><button class="tab" id="starTab">★ 별표 단어</button></div><div class="group"><button class="outline tiny" id="renameDeck">단어장 이름</button><button class="danger tiny" id="deleteDeck">단어장 삭제</button><button class="outline tiny" id="newDeck">＋ 단어장</button></div></div>
+  <div class="stats"><button type="button" class="stat statAction" id="totalStat" aria-label="전체 단어 목록 보기"><strong id="totalN">0</strong><span>전체 단어</span></button><button type="button" class="stat statAction" id="starStat" aria-label="별표 단어 목록 보기"><strong id="starN">0</strong><span>별표 단어</span></button><div class="stat"><strong id="knownN">0</strong><span>암기 완료</span></div></div>
+  <div class="toolbar"><div class="group"><button class="outline tiny" id="renameDeck">단어장 이름</button><button class="danger tiny" id="deleteDeck">단어장 삭제</button><button class="outline tiny" id="newDeck">＋ 단어장</button></div></div>
   <div class="wordList" id="wordList"></div>
   <div class="toolbar" style="margin-top:16px"><button class="outline" id="addWordBtn">＋ 단어 추가</button><button class="primary" id="learnBtn">학습하기 →</button></div>
 </section>
@@ -409,7 +549,13 @@ const STORE='myVocabulary_v2';
 const uid=()=>Math.random().toString(36).slice(2,10);
 let state;try{state=JSON.parse(localStorage.getItem(STORE))||JSON.parse(localStorage.getItem('myVocabularyApp_v1'))}catch(e){}
 if(!state||!state.decks?.length)state={active:null,decks:[{id:uid(),name:'기본 단어장',words:[]}]};
-state.decks.forEach(d=>d.words.forEach(w=>{if(w.starred===undefined)w.starred=false;if(w.wrong===undefined)w.wrong=0;if(w.known===undefined)w.known=false}));
+state.decks.forEach(d=>d.words.forEach(w=>{
+ if(w.starLevel===undefined)w.starLevel=w.starred?1:0;
+ w.starLevel=Math.max(0,Math.min(2,Number(w.starLevel)||0));
+ w.starred=w.starLevel>0;
+ if(w.wrong===undefined)w.wrong=0;
+ if(w.known===undefined)w.known=false;
+}));
 if(!state.active||!state.decks.some(d=>d.id===state.active))state.active=state.decks[0].id;
 let listFilter='all',modalAction=null,studyItems=[],studyQueue=[],studyIndex=0,studyMode='en-ko',answered=false,chunkStart=0,chunkEnd=0,chunkSizeValue=10,chunkPart=0,starFilter=false,completedIds=new Set(),touchX=null,finished=false;
 const pronunciationCache=new Map();let activePronunciationAudio=null,pronunciationRequest=0;
@@ -436,14 +582,26 @@ function updateResumeButton(){
 }
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id))}
+function starClass(level){
+ return level===2?'level2':level===1?'level1':'';
+}
+function cycleStar(word){
+ word.starLevel=((Number(word.starLevel)||0)+1)%3;
+ word.starred=word.starLevel>0;
+ save();
+}
+function starLabel(level){
+ return level===2?'아예 모름':level===1?'헷갈림':'별표 없음';
+}
 function render(){
  $('deckSelect').innerHTML=state.decks.map(d=>`<option value="${d.id}" ${d.id===state.active?'selected':''}>${esc(d.name)}</option>`).join('');
  $('deckTitle').textContent=book().name;
  $('totalN').textContent=words().length;$('starN').textContent=words().filter(w=>w.starred).length;$('knownN').textContent=words().filter(w=>w.known).length;
+ $('totalStat').classList.toggle('selected',listFilter==='all');$('starStat').classList.toggle('selected',listFilter==='star');
+ $('totalStat').setAttribute('aria-pressed',String(listFilter==='all'));$('starStat').setAttribute('aria-pressed',String(listFilter==='star'));
  let arr=words().map((w,i)=>({...w,_index:i})).filter(w=>listFilter==='all'||w.starred);
- $('allTab').classList.toggle('active',listFilter==='all');$('starTab').classList.toggle('active',listFilter==='star');
- $('wordList').innerHTML=arr.length?arr.map(w=>`<div class="wordRow"><span class="idx">${w._index+1}</span><strong class="en">${esc(w.en)}</strong><span class="ko">${esc(w.ko)}</span><button class="star ${w.starred?'on':''}" data-star="${w.id}" aria-label="별표">${w.starred?'★':'☆'}</button><div class="rowBtns"><button class="outline" data-up="${w._index}" ${w._index===0?'disabled':''}>↑</button><button class="outline" data-down="${w._index}" ${w._index===words().length-1?'disabled':''}>↓</button><button class="outline" data-edit="${w.id}">수정</button><button class="danger" data-del="${w.id}">삭제</button></div></div>`).join(''):'<div class="empty">표시할 단어가 없습니다.</div>';
- document.querySelectorAll('[data-star]').forEach(b=>b.onclick=()=>{const w=words().find(x=>x.id===b.dataset.star);w.starred=!w.starred;save();render()});
+ $('wordList').innerHTML=arr.length?arr.map(w=>`<div class="wordRow"><span class="idx">${w._index+1}</span><strong class="en">${esc(w.en)}</strong><span class="ko">${esc(w.ko)}</span><button class="star ${starClass(w.starLevel)} ${w.starred?'on':''}" data-star="${w.id}" aria-label="${starLabel(w.starLevel)}">${w.starred?'★':'☆'}</button><div class="rowBtns"><button class="outline" data-up="${w._index}" ${w._index===0?'disabled':''}>↑</button><button class="outline" data-down="${w._index}" ${w._index===words().length-1?'disabled':''}>↓</button><button class="outline" data-edit="${w.id}">수정</button><button class="danger" data-del="${w.id}">삭제</button></div></div>`).join(''):'<div class="empty">표시할 단어가 없습니다.</div>';
+ document.querySelectorAll('[data-star]').forEach(b=>b.onclick=()=>{const w=words().find(x=>x.id===b.dataset.star);cycleStar(w);render()});
  document.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>move(+b.dataset.up,-1));
  document.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>move(+b.dataset.down,1));
  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('이 단어를 삭제할까요?')){book().words=words().filter(w=>w.id!==b.dataset.del);save();render()}});
@@ -491,7 +649,7 @@ $('deleteDeck').onclick=()=>{
  save();render();
 };
 $('deckSelect').onchange=()=>{state.active=$('deckSelect').value;save();render()};
-$('allTab').onclick=()=>{listFilter='all';render()};$('starTab').onclick=()=>{listFilter='star';render()};
+$('totalStat').onclick=()=>{listFilter='all';render()};$('starStat').onclick=()=>{listFilter='star';render()};
 $('addWordBtn').onclick=()=>showPage('add');$('backList1').onclick=()=>{showPage('listPage');render()};
 $('wordForm').onsubmit=e=>{e.preventDefault();words().push({id:uid(),en:$('enInput').value.trim(),ko:$('koInput').value.trim(),starred:false,known:false,wrong:0});$('enInput').value='';$('koInput').value='';save();render();$('enInput').focus()};
 $('bulkBtn').onclick=()=>{let n=0;for(let line of $('bulkInput').value.split(/\r?\n/)){let p=line.split(',');if(p.length>1&&p[0].trim()&&p.slice(1).join(',').trim()){words().push({id:uid(),en:p[0].trim(),ko:p.slice(1).join(',').trim(),starred:false,known:false,wrong:0});n++}}$('bulkInput').value='';save();render();alert(`${n}개 단어를 등록했습니다.`)};
@@ -600,17 +758,26 @@ function showQuestion(){
  answered=false;let w=studyQueue[studyIndex];
  $('progressText').textContent=`${completedIds.size} / ${studyItems.length}`;
  $('progressFill').style.width=(completedIds.size/studyItems.length*100)+'%';
- $('studyRangeLabel').textContent=`${chunkStart+1}~${chunkEnd}번 · ${studyIndex+1}번째 시도`;
- $('studyStar').textContent=w.starred?'★':'☆';$('studyStar').classList.toggle('on',w.starred);
+ $('studyRangeLabel').textContent=`${chunkStart+1}~${chunkEnd}번`;
+ $('studyStar').textContent=w.starred?'★':'☆';$('studyStar').classList.toggle('on',w.starred);$('studyStar').classList.remove('level1','level2');if(w.starLevel===1)$('studyStar').classList.add('level1');if(w.starLevel===2)$('studyStar').classList.add('level2');$('studyStar').setAttribute('aria-label',starLabel(w.starLevel));
  $('promptType').textContent=studyMode==='en-ko'?'영어 단어의 한글 뜻을 입력하세요':'한글 뜻의 영어 스펠링을 입력하세요';
  $('promptWord').textContent=studyMode==='en-ko'?w.en:w.ko;
  $('replayPronunciation').classList.toggle('hidden',studyMode!=='en-ko');
  $('studyAnswer').value='';$('studyAnswer').disabled=false;$('studyAnswer').className='answerInput';$('feedback').textContent='';$('feedback').className='feedback';$('answerReveal').replaceChildren();
  $('submitAnswer').classList.remove('hidden');$('nextQuestion').classList.add('hidden');$('nextQuestion').textContent='다음 단어';$('nextQuestion').onclick=next;$('showAnswer').classList.remove('hidden');
- /* 입력창 자동 포커스를 제거해 iOS Safari가 학습 화면을 키보드 위치로 자동 이동시키지 않도록 함 */if(studyMode==='en-ko')playPronunciation(w.en,true);
+ // 다음 문제 표시와 동시에 입력창에 포커스해 iOS 키보드가 바로 준비되도록 한다.
+ try{$('studyAnswer').focus({preventScroll:true})}catch(e){$('studyAnswer').focus()}
+ if(studyMode==='en-ko')playPronunciation(w.en,true);
 }
-$('studyStar').onclick=()=>{let w=studyItems[studyIndex];w.starred=!w.starred;$('studyStar').textContent=w.starred?'★':'☆';$('studyStar').classList.toggle('on',w.starred);save()};
-$('replayPronunciation').onclick=()=>{let w=studyQueue[studyIndex];if(w&&studyMode==='en-ko')playPronunciation(w.en,false)};
+$('studyStar').onclick=()=>{let w=studyQueue[studyIndex];if(!w||finished)return;cycleStar(w);$('studyStar').textContent=w.starred?'★':'☆';$('studyStar').classList.toggle('on',w.starred);$('studyStar').classList.remove('level1','level2');if(w.starLevel===1)$('studyStar').classList.add('level1');if(w.starLevel===2)$('studyStar').classList.add('level2');$('studyStar').setAttribute('aria-label',starLabel(w.starLevel));renderStatsOnly()};
+$('replayPronunciation').onclick=()=>{
+ const w=studyQueue[studyIndex];
+ if(!w||studyMode!=='en-ko')return;
+ // Start speech directly in the user gesture; async audio fetches can lose
+ // iOS Safari's playback permission before audio.play() is reached.
+ stopPronunciation();
+ speakFallback(w.en);
+};
 
 function norm(s){return String(s).toLocaleLowerCase().replace(/\s/g,'').trim()}
 function acceptedForms(text){
@@ -653,7 +820,10 @@ function submit(){
  }
  $('progressText').textContent=`${completedIds.size} / ${studyItems.length}`;
  $('progressFill').style.width=(completedIds.size/studyItems.length*100)+'%';
- $('studyAnswer').disabled=true;$('studyAnswer').blur();$('studyPage').classList.remove('keyboard-focused');$('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');
+ $('studyAnswer').disabled=false;
+ $('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.add('hidden');
+ // Keep the input focused so the iOS keyboard stays open. A second Enter advances.
+ try{$('studyAnswer').focus({preventScroll:true})}catch(e){$('studyAnswer').focus()}
  if(studyMode==='en-ko')playPronunciation(w.en,true);
  save();renderStatsOnly();persistStudySession();
 }
@@ -672,7 +842,7 @@ function next(){
  if(!answered){
   current.wrong=(current.wrong||0)+1;
   const expected=studyMode==='en-ko'?current.ko:current.en;
-  $('studyAnswer').disabled=true;
+  $('studyAnswer').disabled=false;
   $('studyAnswer').classList.add('bad');
   $('feedback').textContent='모르는 단어로 처리했습니다';
   $('feedback').className='feedback bad';
@@ -680,7 +850,8 @@ function next(){
   answered=true;
   $('submitAnswer').classList.add('hidden');
   $('showAnswer').classList.add('hidden');
-  $('nextQuestion').classList.remove('hidden');$('nextQuestion').textContent='다음 단어';$('nextQuestion').onclick=next;
+  $('nextQuestion').classList.add('hidden');
+  try{$('studyAnswer').focus({preventScroll:true})}catch(e){$('studyAnswer').focus()}
   if(studyMode==='en-ko')playPronunciation(current.en,true);
   save();renderStatsOnly();persistStudySession();
   return;
@@ -714,9 +885,14 @@ $('showAnswer').onclick=()=>{
  $('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');if(studyMode==='en-ko')playPronunciation(w.en,true);save();renderStatsOnly();persistStudySession()
 };
 $('studyAnswer').addEventListener('keydown',e=>{
+ if(answered && e.key!=='Enter'){
+  e.preventDefault();
+  return;
+ }
  if(e.key==='Enter'&&!e.isComposing){
   e.preventDefault();
-  if(!answered)submit();
+  if(answered)next();
+  else submit();
  }
 });
 
@@ -735,7 +911,7 @@ function swipeFinish(x,y){
  if(!swipeStart)return;
  const dx=x-swipeStart.x,dy=y-swipeStart.y;
  swipeStart=null;
- if(dx>55&&Math.abs(dx)>Math.abs(dy)*1.2)next();
+ if(dx < -55 && Math.abs(dx) > Math.abs(dy) * 1.2) next();
 }
 studySurface.addEventListener('touchstart',e=>{
  if(e.touches.length===1)swipeBegin(e.touches[0].clientX,e.touches[0].clientY);
@@ -801,6 +977,59 @@ $('fileInput').onchange=async e=>{
  }catch(err){alert('CSV 파일을 읽지 못했습니다. 파일 형식을 확인해 주세요.');}
  e.target.value='';
 };
+
+
+// Reliable study controls: handle taps in the capture phase so nested layout,
+// touch/swipe handlers, or stale inline handlers cannot swallow these actions.
+document.addEventListener('click', e => {
+ const target = e.target.closest('#exitStudy,#resetStudy,#replayPronunciation,#studyStar');
+ if (!target) return;
+ e.preventDefault();
+ e.stopImmediatePropagation();
+
+ if (target.id === 'exitStudy') {
+   closeStudy();
+   return;
+ }
+ if (target.id === 'resetStudy') {
+   stopPronunciation();
+   studyQueue = studyItems.slice();
+   studyIndex = 0;
+   completedIds = new Set();
+   answered = false;
+   finished = false;
+   $('studyAnswer').classList.remove('hidden');
+   persistStudySession();
+   showQuestion();
+   return;
+ }
+ if (target.id === 'replayPronunciation') {
+   const w = studyQueue[studyIndex];
+   if (w && studyMode === 'en-ko') {
+     stopPronunciation();
+     const utterance = new SpeechSynthesisUtterance(w.en);
+     utterance.lang = 'en-US';
+     utterance.rate = 0.88;
+     const voices = window.speechSynthesis.getVoices();
+     const voice = voices.find(v => /^en-US$/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+     if (voice) utterance.voice = voice;
+     window.speechSynthesis.speak(utterance);
+   }
+   return;
+ }
+ if (target.id === 'studyStar') {
+   const w = studyQueue[studyIndex];
+   if (!w || finished) return;
+   cycleStar(w);
+   target.textContent = w.starred ? '★' : '☆';
+   target.classList.toggle('on', w.starred);
+   target.classList.remove('level1','level2');
+   if (w.starLevel === 1) target.classList.add('level1');
+   if (w.starLevel === 2) target.classList.add('level2');
+   target.setAttribute('aria-label', starLabel(w.starLevel));
+   renderStatsOnly();
+ }
+}, true);
 
 render();updateResumeButton();showPage('listPage');
 
