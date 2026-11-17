@@ -463,12 +463,6 @@ html, body {
 #studyPage .studyTools,
 #studyPage .studyBottom { z-index: 5 !important; }
 
-
-/* Long study text: keep the prompt and revealed answer on one line.
-   Font size is adjusted by fitStudyLine() to avoid overlap with the input. */
-#studyPage .promptWord { white-space: nowrap !important; overflow: hidden !important; overflow-wrap: normal !important; text-overflow: clip !important; min-height: 0 !important; }
-#studyPage .answerReveal { min-width: 0 !important; max-width: 100% !important; overflow: hidden !important; white-space: nowrap !important; gap: 8px !important; }
-#studyPage .answerReveal > span:not(.answerTag) { min-width: 0 !important; flex: 1 1 auto !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: clip !important; }
 </style>
 </head>
 <body>
@@ -545,7 +539,7 @@ state.decks.forEach(d=>d.words.forEach(w=>{
 }));
 if(!state.active||!state.decks.some(d=>d.id===state.active))state.active=state.decks[0].id;
 let listFilter='all',modalAction=null,studyItems=[],studyQueue=[],studyIndex=0,studyMode='en-ko',answered=false,chunkStart=0,chunkEnd=0,chunkSizeValue=10,chunkPart=0,starFilter=false,completedIds=new Set(),touchX=null,finished=false;
-const pronunciationCache=new Map(),pronunciationUrlCache=new Map();let activePronunciationAudio=null,pronunciationRequest=0,spellingPronouncedFor=null;
+const pronunciationCache=new Map();let activePronunciationAudio=null,pronunciationRequest=0;
 const $=id=>document.getElementById(id),book=()=>state.decks.find(d=>d.id===state.active),words=()=>book().words;
 const save=()=>localStorage.setItem(STORE,JSON.stringify(state));
 function getSavedSession(){return state.studySessions?.[state.active]||null}
@@ -626,12 +620,25 @@ $('modalOk').onclick=()=>{
 $('newDeck').onclick=()=>openModal('새 단어장','단어장 이름','', 'new');
 $('renameDeck').onclick=()=>openModal('단어장 이름 변경','단어장 이름',book().name,'rename');
 $('deleteDeck').onclick=()=>{
- if(state.decks.length===1){alert('마지막 단어장은 삭제할 수 없습니다.');return}
- if(!confirm(`'${book().name}' 단어장과 안의 단어 ${words().length}개를 모두 삭제할까요?`))return;
  const removedId=state.active;
- state.decks=state.decks.filter(d=>d.id!==removedId);
- state.active=state.decks[0].id;
+ const removedName=book().name;
+ const removedCount=words().length;
+ const isLastDeck=state.decks.length===1;
+ const message=isLastDeck
+  ? `'${removedName}' 단어장과 안의 단어 ${removedCount}개를 삭제할까요?\n마지막 단어장을 삭제하면 빈 기본 단어장 상태로 돌아갑니다.`
+  : `'${removedName}' 단어장과 안의 단어 ${removedCount}개를 모두 삭제할까요?`;
+ if(!confirm(message))return;
  if(state.studySessions)delete state.studySessions[removedId];
+ if(isLastDeck){
+  const emptyId=uid();
+  state.decks=[{id:emptyId,name:'기본 단어장',words:[]}];
+  state.active=emptyId;
+  listFilter='all';
+  studyItems=[];studyQueue=[];studyIndex=0;answered=false;finished=false;
+ }else{
+  state.decks=state.decks.filter(d=>d.id!==removedId);
+  state.active=state.decks[0].id;
+ }
  save();render();
 };
 $('deckSelect').onchange=()=>{state.active=$('deckSelect').value;save();render()};
@@ -693,29 +700,32 @@ async function getPronunciationAudio(word){
    const phonetics=(Array.isArray(entries)?entries:[]).flatMap(entry=>entry.phonetics||[]);
    const audioItems=phonetics.filter(item=>item.audio).map(item=>String(item.audio).startsWith('//')?'https:'+item.audio:item.audio);
    const us=audioItems.find(url=>/(?:-us|_us|\/us(?:[-_.]|$))/i.test(url));
-   const selected=us||audioItems.find(url=>!/(?:-uk|_uk|\/uk(?:[-_.]|$)|-au|_au)/i.test(url))||audioItems[0]||null;
-   pronunciationUrlCache.set(key,selected);
-   return selected;
-  }catch(error){pronunciationUrlCache.set(key,null);return null}
+   return us||audioItems.find(url=>!/(?:-uk|_uk|\/uk(?:[-_.]|$)|-au|_au)/i.test(url))||audioItems[0]||null;
+  }catch(error){return null}
  })();
  pronunciationCache.set(key,task);
  return task;
 }
-function speakFallback(word){
- if(!('speechSynthesis' in window)||!word)return;
+async function speakFallback(word){
+ if(!('speechSynthesis' in window))return;
  const synth=window.speechSynthesis;
- const voices=synth.getVoices();
- const voice=voices.find(v=>/^en-US$/i.test(v.lang))||voices.find(v=>/^en(?:-|$)/i.test(v.lang));
+ let voices=synth.getVoices();
+ if(!voices.length){
+  await new Promise(resolve=>{
+   let done=false;const finish=()=>{if(done)return;done=true;resolve()};
+   synth.addEventListener?.('voiceschanged',finish,{once:true});
+   setTimeout(finish,700);
+  });
+  voices=synth.getVoices();
+ }
  const utterance=new SpeechSynthesisUtterance(word);
- utterance.lang='en-US';utterance.rate=0.9;
- if(voice)utterance.voice=voice;
- // Speak immediately with the currently available device voice. Waiting for
- // voiceschanged here can lose iOS Safari's user-gesture playback permission.
+ utterance.lang='en-US';utterance.rate=0.88;
+ const usVoice=voices.find(v=>/^en-US$/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang));
+ if(usVoice)utterance.voice=usVoice;
  synth.cancel();synth.speak(utterance);
 }
-
 async function playPronunciation(word,auto=false){
- if(!word)return;
+ if(studyMode!=='en-ko'||!word)return;
  const request=++pronunciationRequest;
  if(activePronunciationAudio){activePronunciationAudio.pause();activePronunciationAudio.currentTime=0;activePronunciationAudio=null}
  if('speechSynthesis' in window)window.speechSynthesis.cancel();
@@ -724,6 +734,7 @@ async function playPronunciation(word,auto=false){
  if(request!==pronunciationRequest)return;
  const candidates=[];
  if(url)candidates.push(url);
+ candidates.push('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-US&q='+encodeURIComponent(word));
  let played=false;
  for(const src of candidates){
   if(request!==pronunciationRequest)break;
@@ -733,44 +744,6 @@ async function playPronunciation(word,auto=false){
  if(!played&&request===pronunciationRequest)await speakFallback(word);
  if(btn)btn.disabled=false;
 }
-function playTypedSpellingPronunciation(word){
- if(!word)return;
- stopPronunciation();
- const key=String(word).trim().toLowerCase();
- const url=pronunciationUrlCache.get(key);
- if(url){
-  const audio=new Audio(url);audio.preload='auto';activePronunciationAudio=audio;
-  audio.play().catch(()=>{if(activePronunciationAudio===audio){activePronunciationAudio=null;speakFallback(word)}});
- }else{
-  // Use device English speech immediately; this preserves iOS user activation.
-  speakFallback(word);
- }
-}
-function fitStudyLine(element,maxSize,minSize=12){
- if(!element)return;
- const apply=()=>{
-  const width=element.clientWidth;
-  if(!width)return;
-  let size=maxSize;
-  element.style.fontSize=size+'px';
-  while(element.scrollWidth>width+1&&size>minSize){
-   size-=1;element.style.fontSize=size+'px';
-  }
- };
- requestAnimationFrame(apply);
-}
-function fitStudyText(){
- fitStudyLine($('promptWord'),48,14);
- const reveal=$('answerReveal');
- if(reveal){
-  const value=reveal.querySelector('span:not(.answerTag)');
-  if(value)fitStudyLine(value,23,12);
-  else if(reveal.textContent)fitStudyLine(reveal,18,11);
- }
-}
-window.addEventListener('resize',fitStudyText);
-if(window.visualViewport)window.visualViewport.addEventListener('resize',fitStudyText);
-
 function showQuestion(){
  if(finished)return;
  stopPronunciation();
@@ -781,15 +754,13 @@ function showQuestion(){
  $('studyRangeLabel').textContent=`${chunkStart+1}~${chunkEnd}번`;
  $('studyStar').textContent=w.starred?'★':'☆';$('studyStar').classList.toggle('on',w.starred);$('studyStar').classList.remove('level1','level2');if(w.starLevel===1)$('studyStar').classList.add('level1');if(w.starLevel===2)$('studyStar').classList.add('level2');$('studyStar').setAttribute('aria-label',starLabel(w.starLevel));
  $('promptType').textContent=studyMode==='en-ko'?'영어 단어의 한글 뜻을 입력하세요':'한글 뜻의 영어 스펠링을 입력하세요';
- $('promptWord').textContent=studyMode==='en-ko'?w.en:w.ko;spellingPronouncedFor=null;
+ $('promptWord').textContent=studyMode==='en-ko'?w.en:w.ko;
  $('replayPronunciation').classList.toggle('hidden',studyMode!=='en-ko');
  $('studyAnswer').value='';$('studyAnswer').disabled=false;$('studyAnswer').className='answerInput';$('feedback').textContent='';$('feedback').className='feedback';$('answerReveal').replaceChildren();
  $('submitAnswer').classList.remove('hidden');$('nextQuestion').classList.add('hidden');$('nextQuestion').textContent='다음 단어';$('nextQuestion').onclick=next;$('showAnswer').classList.remove('hidden');
  // 다음 문제 표시와 동시에 입력창에 포커스해 iOS 키보드가 바로 준비되도록 한다.
  try{$('studyAnswer').focus({preventScroll:true})}catch(e){$('studyAnswer').focus()}
- fitStudyText();
  if(studyMode==='en-ko')playPronunciation(w.en,true);
- else getPronunciationAudio(w.en); // preload audio; play only after the learner enters the spelling
 }
 $('studyStar').onclick=()=>{let w=studyQueue[studyIndex];if(!w||finished)return;cycleStar(w);$('studyStar').textContent=w.starred?'★':'☆';$('studyStar').classList.toggle('on',w.starred);$('studyStar').classList.remove('level1','level2');if(w.starLevel===1)$('studyStar').classList.add('level1');if(w.starLevel===2)$('studyStar').classList.add('level2');$('studyStar').setAttribute('aria-label',starLabel(w.starLevel));renderStatsOnly()};
 $('replayPronunciation').onclick=()=>{
@@ -854,8 +825,7 @@ function showAnswerLabel(text){
  if(!text)return;
  const tag=document.createElement('span');tag.className='answerTag';tag.textContent='정답';
  const value=document.createElement('span');value.textContent=text;
- value.style.minWidth='0';value.style.flex='1 1 auto';value.style.whiteSpace='nowrap';value.style.overflow='hidden';
- box.append(tag,value);fitStudyText();
+ box.append(tag,value);
 }
 function renderStatsOnly(){$('totalN').textContent=words().length;$('starN').textContent=words().filter(w=>w.starred).length;$('knownN').textContent=words().filter(w=>w.known).length}
 function next(){
@@ -889,7 +859,7 @@ function finishStudy(){
  stopPronunciation();finished=true;clearSavedSession();$('progressText').textContent=`${studyItems.length} / ${studyItems.length}`;$('progressFill').style.width='100%';
  $('promptType').textContent=`제 ${chunkPart+1}구간 학습 완료`;$('promptWord').textContent='GOOD JOB!';
  $('studyAnswer').classList.add('hidden');$('feedback').textContent='구간의 모든 단어를 한 번 이상 정답으로 맞혔습니다.';$('feedback').className='feedback good';
- $('answerReveal').textContent='다음 구간으로 이동하거나 단어장으로 돌아갈 수 있습니다.';fitStudyText();
+ $('answerReveal').textContent='다음 구간으로 이동하거나 단어장으로 돌아갈 수 있습니다.';
  $('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');
  $('nextQuestion').classList.remove('hidden');
  let arr=words().filter(w=>!$('starOnly').checked||w.starred),total=$('chunkSize').value==='all'?arr.length:+$('chunkSize').value;
@@ -907,17 +877,6 @@ $('showAnswer').onclick=()=>{
  $('feedback').textContent='정답을 확인하세요';$('feedback').className='feedback bad';showAnswerLabel(expected);
  $('submitAnswer').classList.add('hidden');$('showAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');if(studyMode==='en-ko')playPronunciation(w.en,true);save();renderStatsOnly();persistStudySession()
 };
-$('studyAnswer').addEventListener('input',()=>{
- if(studyMode!=='ko-en'||answered||finished)return;
- const w=studyQueue[studyIndex];if(!w)return;
- const typed=$('studyAnswer').value.trim().toLocaleLowerCase();
- const expected=String(w.en||'').trim().toLocaleLowerCase();
- if(typed&&typed===expected&&spellingPronouncedFor!==w.id){
-  spellingPronouncedFor=w.id;
-  playTypedSpellingPronunciation(w.en);
- }
-});
-
 $('studyAnswer').addEventListener('keydown',e=>{
  if(answered && e.key!=='Enter'){
   e.preventDefault();
