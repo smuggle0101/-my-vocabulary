@@ -538,7 +538,7 @@ html, body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -664,12 +664,24 @@ googleLoginButton?.addEventListener('click',async()=>{
    setSyncStatus('로그아웃 · 이 기기에 저장');
    googleLoginButton.textContent='Google 로그인';
   }else{
-   setSyncStatus('Google 로그인으로 이동 중…');
-   await signInWithRedirect(auth,googleProvider);
+   setSyncStatus('Google 로그인 창을 여는 중…');
+   const credential = await signInWithPopup(auth,googleProvider);
+   if(credential?.user){
+    setSyncStatus('Google 로그인 완료 · 클라우드 연결 중…');
+   }
   }
- }catch(error){console.error(error);setSyncStatus('로그인 실패');alert('Google 로그인에 실패했습니다. '+(error.code||error.message));}
+ }catch(error){
+  console.error('Google popup sign-in failed:',error);
+  setSyncStatus('로그인 실패');
+  const messages={
+   'auth/popup-blocked':'브라우저가 로그인 팝업을 차단했습니다. 사이트의 팝업 허용 여부를 확인한 뒤 다시 시도해 주세요.',
+   'auth/popup-closed-by-user':'Google 로그인 창이 닫혔습니다. 다시 로그인해 주세요.',
+   'auth/unauthorized-domain':'Firebase 승인 도메인에 현재 사이트 주소가 등록되어 있는지 확인해 주세요.',
+   'auth/operation-not-supported-in-this-environment':'현재 브라우저 환경에서 팝업 로그인을 지원하지 않습니다. Chrome 또는 Safari에서 사이트를 직접 열어 주세요.'
+  };
+  alert('Google 로그인에 실패했습니다.\n\n'+(messages[error.code]||error.code||error.message));
+ }
 });
-getRedirectResult(auth).catch(error=>{console.error('Google redirect result:',error);});
 onAuthStateChanged(auth,async(user)=>{
  firebaseUser=user||null;
  if(user){
