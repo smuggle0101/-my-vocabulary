@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#4169f5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="My Vocabulary">
+<meta name="apple-mobile-web-app-title" content="My Voka">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
 <link rel="manifest" href="./manifest.json">
 <title>My Vocabulary</title>
@@ -469,10 +469,10 @@ html, body {
 #studyPage .studyBottom { z-index: 5 !important; }
 
 
-.accountArea{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
-.accountStatus{font-size:11px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accountArea{display:flex;align-items:center;gap:7px;flex-wrap:nowrap;justify-content:flex-end;min-width:0}
+.accountStatus{font-size:12px;color:var(--muted);max-width:none;overflow:visible;text-overflow:clip;white-space:nowrap;flex:0 0 auto}
 #googleLoginBtn{white-space:nowrap}
-@media(max-width:600px){header{height:auto;min-height:66px;align-items:flex-start;padding:10px 0;flex-wrap:wrap}.accountArea{width:100%;justify-content:flex-end}.accountStatus{max-width:180px}}
+@media(max-width:600px){header{height:auto;min-height:66px;align-items:flex-start;padding:10px 0;flex-wrap:wrap}.accountArea{width:100%;justify-content:flex-end}.accountStatus{font-size:12px}}
 
 </style>
 </head>
@@ -589,7 +589,7 @@ function queueCloudSave(){
   try{
    const ref=doc(db,'users',firebaseUser.uid,'appData','main');
    await setDoc(ref,{state:state,updatedAt:serverTimestamp()});
-   setSyncStatus('☁ 동기화 완료 · '+(firebaseUser.displayName||firebaseUser.email||'Google 계정'));
+   setSyncStatus('동기화 완료');
   }catch(error){
    console.error('Firestore save failed:',error);
    setSyncStatus('동기화 실패 · 인터넷/보안 규칙 확인');
@@ -623,11 +623,11 @@ async function loadCloudForUser(user){
    localStorage.setItem(STORE,JSON.stringify(state));
    applyingCloudState=false;
    if(typeof render==='function'){render();updateResumeButton();}
-   setSyncStatus('☁ 동기화 완료 · '+(user.displayName||user.email));
+   setSyncStatus('동기화 완료');
   }else{
    // First sign-in: upload the words already stored on this device.
    await setDoc(ref,{state:state,updatedAt:serverTimestamp()});
-   setSyncStatus('☁ 기존 단어장을 클라우드에 저장했습니다');
+   setSyncStatus('동기화 완료');
   }
   cloudReady=true;
   cloudUnsubscribe=onSnapshot(ref,(cloudSnap)=>{
@@ -642,7 +642,7 @@ async function loadCloudForUser(user){
     localStorage.setItem(STORE,JSON.stringify(state));
     applyingCloudState=false;
     if(typeof render==='function'){render();updateResumeButton();}
-    setSyncStatus('☁ 다른 기기의 변경사항을 반영했습니다');
+    setSyncStatus('동기화 완료');
    }
   },(error)=>{console.error('Firestore listener failed:',error);setSyncStatus('실시간 동기화 오류');});
  }catch(error){

@@ -1,6 +1,6 @@
 {
-  "name": "My Vocabulary",
-  "short_name": "Vocabulary",
+  "name": "My Voka",
+  "short_name": "My Voka",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f5f6fa",
